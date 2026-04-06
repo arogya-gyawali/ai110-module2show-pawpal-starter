@@ -2,99 +2,128 @@
 
 ## 1. System Design
 
-- user should be able to enter and manage information about their pet and themselves
-- add edit and manage pet care tasks, include the details of the task here
-- user should be able to view a daily care plan, based on their available time etc.
+* A user should be able to enter and manage information about themselves and their pets
+* A user should be able to add, edit, and manage pet care tasks with relevant details
+* A user should be able to view a daily care plan based on available time and priorities
 
-**a. Initial design**
+### a. Initial Design
 
-- Briefly describe your initial UML design.
-- Initial design has 4 classes, Owner, Pet, Task, and Schedular.
+* My initial UML design included four main classes: Owner, Pet, Task, and Scheduler
+* The Owner class stores user information such as available time, preferences, and a list of pets
+* The Pet class holds details about each pet, such as name, type, and age
+* The Task class represents pet care activities, including duration, priority, and completion status
+* The Scheduler class manages tasks and generates a daily plan based on constraints and priorities
 
-- What classes did you include, and what responsibilities did you assign to each?
-- The Owner class represents the user of the system and is responsible for storing information such as available time, preferences, and a list of pets. The Pet class holds details about each pet, including attributes like name, type, and age. The Task class represents individual pet care activities, such as feeding or walking, and includes information like duration, priority, and completion status. The Scheduler class is responsible for managing tasks and generating a daily plan based on the owner's available time and task priorities.
+### b. Design Changes
 
-**b. Design changes**
-
-- Did your design change during implementation?
-- If yes, describe at least one change and why you made it.
-
-
-* Added a relationship between Task and Pet by including a pet attribute in the Task class so each task is tied to a specific pet.
-
-* Connected Scheduler to Owner and removed available_time from Scheduler to avoid duplication and ensure a single source of truth.
-
-* Added a link between Owner and Scheduler so user data, pets, and scheduling logic are properly connected.
-
-* Replaced update_task(info: dict) with explicit parameters to make the method safer and clearer.
-
-* Made helper methods like sorting and filtering private (e.g., _sort_tasks_by_priority) to better reflect that they are internal logic.
-
-* Added missing methods such as remove_pet() in Owner and remove_task() in Scheduler to make the system more complete.
-
-* Clarified the distinction between tasks (input list) and generated_plan (final scheduled output) in the Scheduler.
-
+* Added a relationship between Task and Pet so each task is tied to a specific pet
+* Connected Scheduler to Owner and removed duplicate available_time to ensure a single source of truth
+* Linked Owner and Scheduler to integrate user data with scheduling logic
+* Replaced update_task(info: dict) with explicit parameters for better safety and clarity
+* Made helper methods (e.g., sorting and filtering) private to reflect internal logic
+* Added missing methods such as remove_pet() and remove_task() to improve completeness
+* Clarified the distinction between tasks (input) and generated_plan (output) in Scheduler
 
 ---
 
 ## 2. Scheduling Logic and Tradeoffs
 
-**a. Constraints and priorities**
+### a. Constraints and Priorities
 
-- What constraints does your scheduler consider (for example: time, priority, preferences)?
-- How did you decide which constraints mattered most?
+* The scheduler considers available time, task priority, and basic task attributes (duration, category)
+* Priority was treated as the most important factor, ensuring high-priority tasks are scheduled first
+* Time constraints were enforced to ensure the total scheduled tasks fit within the owner's available time
 
-**b. Tradeoffs**
+### b. Tradeoffs
 
-- Describe one tradeoff your scheduler makes.
-- Why is that tradeoff reasonable for this scenario?
+* I reviewed my conflict detection method using AI and received a more Pythonic version using defaultdict and list comprehensions
 
-- 2b. Tradeoffs:
+* I chose to keep my original version because it is more explicit and easier to understand
 
-I reviewed my conflict detection method using AI and received a more Pythonic version that used defaultdict and a list comprehension to make the code more concise. While this version is shorter and slightly more efficient, I chose to keep my original implementation because it is more explicit and easier to understand.
+* The scheduler only detects conflicts when tasks have exactly the same scheduled time rather than overlapping durations
 
-Additionally, my scheduler only detects conflicts when tasks have exactly the same scheduled time rather than checking for overlapping durations. This simplifies the implementation but may miss more complex scheduling conflicts. This tradeoff prioritizes readability and simplicity over full accuracy.
+* This simplifies implementation and improves readability but may miss more complex conflicts
+
+* This tradeoff prioritizes simplicity and clarity over full accuracy
 
 ---
 
 ## 3. AI Collaboration
 
-**a. How you used AI**
+### a. How I Used AI
 
-- How did you use AI tools during this project (for example: design brainstorming, debugging, refactoring)?
-- What kinds of prompts or questions were most helpful?
+* Used AI (Claude and Copilot) for design brainstorming and identifying core system components
 
-**b. Judgment and verification**
+* Generated class skeletons and method stubs based on UML design
 
-- Describe one moment where you did not accept an AI suggestion as-is.
-- How did you evaluate or verify what the AI suggested?
+* Assisted with implementing scheduling logic, sorting, filtering, and conflict detection
+
+* Used AI for debugging by analyzing errors and failed tests
+
+* Refined algorithms while maintaining control over readability and simplicity
+
+* Most helpful prompts included:
+
+  * Implementation requests (e.g., “implement this method based on my class structure”)
+  * Debugging questions (e.g., “why is this test failing?”)
+  * Design reviews (e.g., “are there missing relationships?”)
+  * Context-aware prompts using specific files (e.g., `#file:pawpal_system.py`)
+
+* Prompts with clear context and requirements produced the most accurate results
+
+### b. Judgment and Verification
+
+* I did not always accept AI suggestions directly, especially when they reduced readability
+* For example, I rejected a more compact conflict detection implementation in favor of a clearer version
+* I evaluated AI outputs by checking correctness, readability, and alignment with my system design
 
 ---
 
 ## 4. Testing and Verification
 
-**a. What you tested**
+### a. What I Tested
 
-- What behaviors did you test?
-- Why were these tests important?
+* Verified sorting correctness to ensure tasks are ordered chronologically
 
-**b. Confidence**
+* Tested recurring task logic to confirm daily tasks generate a new task with the correct next due date
 
-- How confident are you that your scheduler works correctly?
-- What edge cases would you test next if you had more time?
+* Checked conflict detection to ensure tasks scheduled at the same time are flagged
+
+* Tested scheduling behavior to ensure tasks fit within available time constraints
+
+* These tests were important because they validate core functionality and ensure algorithms behave correctly under normal and edge conditions
+
+### b. Confidence
+
+* I am confident (4/5) that the scheduler works correctly for core use cases
+
+* The test suite confirms that sorting, filtering, recurrence, and conflict detection work as expected
+
+* If I had more time, I would test:
+
+  * Overlapping task durations (not just exact time conflicts)
+  * Invalid or malformed time inputs (e.g., "abc", "25:99")
+  * Behavior with a large number of tasks
+  * Edge cases such as repeated task completion or pets with no tasks
 
 ---
 
 ## 5. Reflection
 
-**a. What went well**
+### a. What Went Well
 
-- What part of this project are you most satisfied with?
+* The system design remained consistent from UML to implementation
+* Scheduling algorithms (sorting, filtering, recurrence, conflict detection) were successfully implemented
+* AI tools accelerated development while allowing me to maintain control over decisions
 
-**b. What you would improve**
+### b. What I Would Improve
 
-- If you had another iteration, what would you improve or redesign?
+* Improve conflict detection to handle overlapping time ranges
+* Enhance scheduling logic to be more optimized rather than purely greedy
+* Improve the Streamlit UI for better usability and visual clarity
 
-**c. Key takeaway**
+### c. Key Takeaway
 
-- What is one important thing you learned about designing systems or working with AI on this project?
+* Designing systems requires balancing simplicity, readability, and functionality
+* AI is most effective when used as a tool, with the developer acting as the lead architect
+* Critical thinking and evaluation are essential when working with AI-generated solutions

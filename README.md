@@ -42,6 +42,27 @@ pip install -r requirements.txt
 6. Connect your logic to the Streamlit UI in `app.py`.
 7. Refine UML so it matches what you actually built.
 
+## 📸 Demo
+
+<a href="/course_images/ai110/first.png" target="_blank">
+  <img src='/course_images/ai110/first.png' title='PawPal App' alt='PawPal App' class='center-block' />
+</a>
+
+<a href="/course_images/ai110/second.png" target="_blank">
+  <img src='/course_images/ai110/second.png' title='PawPal App' alt='PawPal App' class='center-block' />
+</a>
+
+## Features
+
+- **Priority-Based Scheduling** — Generates a daily care plan by sorting tasks from highest to lowest priority and greedily selecting tasks that fit within the owner's available time budget
+- **Time-Based Sorting** — Orders tasks chronologically by scheduled start time (`HH:MM`); unscheduled tasks are placed at the end
+- **Conflict Detection** — Identifies tasks assigned to the same time slot and surfaces them as warning messages without blocking schedule generation
+- **Recurring Tasks** — Daily and weekly tasks automatically produce a new task instance with an incremented due date upon completion; one-time tasks do not recur
+- **Filtering** — Tasks can be filtered by pet name or completion status to focus on relevant subsets of the schedule
+- **Multi-Pet Support** — An owner can manage multiple pets, each with their own independent task list, all unified into a single schedule
+- **Schedule Explanation** — Generates a human-readable summary of the active plan, including total time used and per-task details
+- **Streamlit UI** — Interactive web interface for adding owners, pets, and tasks; displays the sorted task list, conflict warnings, and generated schedule in real time
+
 ## Smarter Scheduling
 
 PawPal+ now includes several improvements that make the scheduling system more intelligent and practical for real-world use:
