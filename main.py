@@ -13,10 +13,10 @@ def main():
     owner.add_pet(cat)
 
     # --- Create Tasks ---
-    morning_walk = Task(name="Morning Walk",   duration=30, priority=3, category="Exercise")
-    feeding_dog  = Task(name="Feed Max",       duration=10, priority=5, category="Feeding")
-    feeding_cat  = Task(name="Feed Luna",      duration=10, priority=5, category="Feeding")
-    medication   = Task(name="Give Medication",duration=5,  priority=4, category="Health")
+    morning_walk = Task(name="Morning Walk",   duration=30, priority=3, category="Exercise", time="08:00")
+    feeding_dog  = Task(name="Feed Max",       duration=10, priority=5, category="Feeding",  time="08:00")
+    feeding_cat  = Task(name="Feed Luna",      duration=10, priority=5, category="Feeding",  time="09:00")
+    medication   = Task(name="Give Medication",duration=5,  priority=4, category="Health",   time="09:00")
     grooming     = Task(name="Brush Coat",     duration=20, priority=2, category="Grooming")
     playtime     = Task(name="Playtime",       duration=30, priority=1, category="Exercise")
 
@@ -48,6 +48,17 @@ def main():
 
     print("-" * 40)
     print(scheduler.explain_plan())
+
+    # --- Conflict Detection ---
+    print("=" * 40)
+    print("        CONFLICT WARNINGS")
+    print("=" * 40)
+    conflicts = scheduler.detect_conflicts()
+    if conflicts:
+        for warning in conflicts:
+            print(warning)
+    else:
+        print("No conflicts detected.")
     print("=" * 40)
 
 

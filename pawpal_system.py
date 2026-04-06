@@ -1,6 +1,7 @@
 from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Optional
+from datetime import date, timedelta
 
 
 @dataclass
@@ -38,8 +39,11 @@ class Task:
     duration: int       # in minutes
     priority: int
     category: str
-    pet: Optional[Pet] = None   # the pet this task belongs to
+    pet: Optional[Pet] = None           # the pet this task belongs to
     completed: bool = False
+    time: Optional[str] = None          # scheduled start time in "HH:MM" format
+    frequency: str = "once"             # recurrence: "once", "daily", or "weekly"
+    due_date: Optional[date] = None     # when this task is due
 
     def update_task(
         self,
@@ -58,9 +62,31 @@ class Task:
         if category is not None:
             self.category = category
 
-    def mark_complete(self) -> None:
-        """Mark this task as completed."""
+    def mark_complete(self) -> Optional[Task]:
+        """Mark this task as completed. For recurring tasks, returns a new Task
+        with the next due_date; otherwise returns None."""
         self.completed = True
+
+        if self.frequency == "daily":
+            gap = timedelta(days=1)
+        elif self.frequency == "weekly":
+            gap = timedelta(weeks=1)
+        else:
+            return None  # "once" tasks don't recur
+
+        next_due = (self.due_date + gap) if self.due_date else None
+        next_task = Task(
+            name=self.name,
+            duration=self.duration,
+            priority=self.priority,
+            category=self.category,
+            time=self.time,
+            frequency=self.frequency,
+            due_date=next_due,
+        )
+        if self.pet is not None:
+            self.pet.add_task(next_task)
+        return next_task
 
 
 class Owner:
@@ -123,6 +149,37 @@ class Scheduler:
                 selected.append(task)
                 time_remaining -= task.duration
         return selected
+
+    def detect_conflicts(self) -> list[str]:
+        """Return warning messages for any tasks sharing the same scheduled time."""
+        warnings = []
+        time_groups: dict[str, list[Task]] = {}
+
+        for task in self.owner.get_all_tasks():
+            if task.time is not None:
+                time_groups.setdefault(task.time, []).append(task)
+
+        for time_slot, tasks in time_groups.items():
+            if len(tasks) > 1:
+                names = " and ".join(t.name for t in tasks)
+                warnings.append(f"Conflict: {names} are both scheduled at {time_slot}")
+
+        return warnings
+
+    def filter_by_pet(self, pet_name: str) -> list[Task]:
+        """Return all tasks belonging to the pet with the given name."""
+        tasks = self.owner.get_all_tasks()
+        return [t for t in tasks if t.pet is not None and t.pet.name == pet_name]
+
+    def filter_by_completion(self, completed: bool) -> list[Task]:
+        """Return tasks that are done (completed=True) or still pending (completed=False)."""
+        tasks = self.owner.get_all_tasks()
+        return [t for t in tasks if t.completed == completed]
+
+    def sort_by_time(self) -> list[Task]:
+        """Return all tasks sorted ascending by scheduled start time ('HH:MM'); unscheduled tasks last."""
+        tasks = self.owner.get_all_tasks()
+        return sorted(tasks, key=lambda t: t.time if t.time is not None else "99:99")
 
     def explain_plan(self) -> str:
         """Return a human-readable summary of the generated schedule."""

@@ -49,6 +49,12 @@
 - Describe one tradeoff your scheduler makes.
 - Why is that tradeoff reasonable for this scenario?
 
+- 2b. Tradeoffs:
+
+I reviewed my conflict detection method using AI and received a more Pythonic version that used defaultdict and a list comprehension to make the code more concise. While this version is shorter and slightly more efficient, I chose to keep my original implementation because it is more explicit and easier to understand.
+
+Additionally, my scheduler only detects conflicts when tasks have exactly the same scheduled time rather than checking for overlapping durations. This simplifies the implementation but may miss more complex scheduling conflicts. This tradeoff prioritizes readability and simplicity over full accuracy.
+
 ---
 
 ## 3. AI Collaboration

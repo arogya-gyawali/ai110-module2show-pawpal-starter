@@ -41,3 +41,14 @@ pip install -r requirements.txt
 5. Add tests to verify key behaviors.
 6. Connect your logic to the Streamlit UI in `app.py`.
 7. Refine UML so it matches what you actually built.
+
+## Smarter Scheduling
+
+PawPal+ now includes several improvements that make the scheduling system more intelligent and practical for real-world use:
+
+* **Sorting by Time**: Tasks can be ordered by their scheduled time (HH:MM), helping create a clear daily timeline.
+* **Filtering Options**: Tasks can be filtered by pet name or completion status, making it easier to manage and view relevant tasks.
+* **Recurring Tasks**: Tasks marked as daily or weekly are automatically regenerated after completion using updated due dates.
+* **Conflict Detection**: The system identifies tasks scheduled at the same time and provides warning messages instead of failing.
+
+These features enhance usability by making the system more organized, responsive, and closer to real-life pet care planning.
