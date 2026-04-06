@@ -181,6 +181,22 @@ class Scheduler:
         tasks = self.owner.get_all_tasks()
         return sorted(tasks, key=lambda t: t.time if t.time is not None else "99:99")
 
+    def find_next_available_slot(self) -> str:
+        """Return the next available start time (HH:MM) after all scheduled tasks end.
+        If no tasks have a scheduled time, returns '00:00'."""
+        scheduled = [t for t in self.owner.get_all_tasks() if t.time is not None]
+        if not scheduled:
+            return "00:00"
+
+        latest_end_minutes = 0
+        for task in scheduled:
+            hours, mins = map(int, task.time.split(":"))
+            end = hours * 60 + mins + task.duration
+            if end > latest_end_minutes:
+                latest_end_minutes = end
+
+        return f"{latest_end_minutes // 60:02d}:{latest_end_minutes % 60:02d}"
+
     def explain_plan(self) -> str:
         """Return a human-readable summary of the generated schedule."""
         if not self.generated_plan:

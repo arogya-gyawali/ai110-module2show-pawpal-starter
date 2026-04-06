@@ -134,6 +134,9 @@ else:
                 st.warning(warning)
         else:
             st.success("No scheduling conflicts.")
+
+        next_slot = scheduler.find_next_available_slot()
+        st.info(f"Next available time slot: **{next_slot}**")
     else:
         st.info("No tasks yet.")
 

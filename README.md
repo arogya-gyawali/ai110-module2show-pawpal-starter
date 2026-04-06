@@ -96,3 +96,14 @@ These tests include both normal scenarios and edge cases to ensure the system be
 ⭐⭐⭐⭐☆ (4/5)
 
 The system performs reliably for core features such as scheduling, filtering, recurrence, and conflict detection. While some logic is simplified (e.g., conflict detection only checks exact time matches), the test suite confirms that the main functionality works as expected.
+
+
+## Advanced Scheduling Feature
+
+An additional algorithmic feature was implemented to enhance the system:
+
+* **Next Available Time Slot**: The scheduler can identify the next available time slot based on existing scheduled tasks. This helps users determine when they can add new tasks without conflicts.
+
+### Use of Agent Mode
+
+Agent Mode (via AI tools like Claude) was used to implement this feature by analyzing the existing Scheduler class and generating a method that integrates with the current task structure. The AI helped draft the logic for identifying gaps between scheduled tasks, while I reviewed and ensured the implementation remained simple, readable, and consistent with the overall system design.
